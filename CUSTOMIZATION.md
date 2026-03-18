@@ -213,3 +213,83 @@ Yes. Add this to the prompt: _"Detect the language of each message and reply in 
 
 **How do I test before going live?**  
 In the Meta App Getting Started page, add your personal WhatsApp number to the test number allowlist. Send a message from that number to test.
+
+---
+
+## Real World Example: Rock Aliens 🎸
+
+> **Website:** https://www.rockaliens.co.in  
+> **Business:** Music-themed restaurant, café, and live events venue (India)
+
+This section walks through how to deploy this bot end-to-end for Rock Aliens.
+
+### What Rock Aliens needs from the bot
+
+- Answer questions about the menu (vegetarian options, pricing, specials)
+- Tell customers about upcoming events (live bands, open-mic, DJ nights)
+- Handle table reservations and direct group bookings
+- Share delivery / takeaway options
+- Respond in both Hindi and English
+- Escalate complex requests (private events, complaints) to the team
+
+### Environment variables for Rock Aliens' deployment
+
+```
+WHATSAPP_ACCESS_TOKEN=EAAxxxx...            # From Rock Aliens' Meta App
+WHATSAPP_PHONE_NUMBER_ID=1234567890         # Rock Aliens' WhatsApp Business number ID
+WHATSAPP_VERIFY_TOKEN=rockaliens_webhook_2024   # A secret you choose
+OPENAI_API_KEY=sk-proj-...                  # Rock Aliens' (or your shared) OpenAI key
+NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+```
+
+Deploy at, for example: `https://whatsapp-agent-rockaliens.vercel.app`
+
+### The agent prompt to paste into Agent Settings
+
+The full ready-to-use prompt is in [`examples/rock-aliens-agent-prompt.md`](examples/rock-aliens-agent-prompt.md).
+
+Key sections it covers:
+
+| Section | What it contains |
+|---|---|
+| Business intro | What Rock Aliens is — music-themed dining + events |
+| Menu highlights | Burgers, pizzas, Indian fusion, beverages, desserts with price ranges in ₹ |
+| Events & live music | Live band nights (Fri/Sat), open-mic (Wed), DJ nights, private bookings |
+| Table reservations | How to book, advance notice policy, group booking rules |
+| Location & hours | Weekday/weekend hours, holiday policy |
+| Ordering & delivery | Dine-in, takeaway, Swiggy/Zomato delivery |
+| Payments | UPI, cards, cash — no surcharge on digital payments |
+| Cancellations | Reservation and advance payment refund policies |
+| Contact | WhatsApp, website, Instagram, email |
+| Escalation | How to hand off to the human team |
+| Language | Auto-detects Hindi and English |
+| Tone | Warm, rock-music-spirited, uses 🤘 |
+
+### Example conversations
+
+**Customer:** Hi, do you have live music tonight?
+
+**Bot:** Hey there! 🤘 We have **live band nights every Friday and Saturday starting at 8:00 PM**. A cover charge of ₹200–₹500 may apply (often redeemable against your bill). Check our Instagram [@rockaliens](https://instagram.com/rockaliens) for the band lineup!
+
+---
+
+**Customer:** Kya aapke paas vegetarian options hain?  
+*(Hindi: "Do you have vegetarian options?")*
+
+**Bot:** Bilkul! 🌿 Hamare paas kaafi saare vegetarian options hain — Veg Meteor Patty Burger, Dark Side of the Moon Pizza (7-cheese), Rocking Paneer Tikka, aur bahut kuch! Koi specific requirement hai? 😊🤘
+
+---
+
+**Customer:** I want to book the venue for a corporate party of 50 people
+
+**Bot:** Absolutely, we'd love to host your corporate party! 🎉 Rock Aliens can accommodate private events for up to 200 guests, so 50 is no problem. For a customised experience, please reach out at hello@rockaliens.co.in or share your contact details and I'll flag your interest to the team right now! 🤘
+
+### How to update the prompt when Rock Aliens changes their menu or events
+
+1. Log in to the dashboard → **Agent Settings**
+2. Edit the relevant section in the prompt (e.g. update event days, add new menu items, change prices)
+3. Click **Save Prompt** — the bot uses the new prompt for the very next message
+
+No redeployment. No code changes. Takes 30 seconds.

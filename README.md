@@ -184,6 +184,14 @@ IMPORTANT: If a customer asks something you don't know, tell them
 you'll connect them with a human agent rather than guessing.
 ```
 
+### Real Example: Rock Aliens 🎸
+
+The `AGENT_PROMPT.md` file already contains a complete working example for **[Rock Aliens](https://www.rockaliens.co.in)** — a music-themed restaurant, café, and live events venue in India.
+
+It covers: menu (with ₹ prices), vegetarian options, live music schedule, table reservations, private events, delivery, UPI payment, Hindi/English bilingual support, and escalation rules.
+
+See the full prompt + sample conversations in [`examples/rock-aliens-agent-prompt.md`](examples/rock-aliens-agent-prompt.md).
+
 ---
 
 ## Providing This to Other Businesses
@@ -228,7 +236,9 @@ whatsapp-ai-agent/
 │   └── whatsapp.ts              # Meta webhook parser + message sender
 ├── supabase/
 │   └── schema.sql               # Full Postgres schema with RLS policies
-├── AGENT_PROMPT.md              # Default agent prompt (editable via dashboard)
+├── examples/
+│   └── rock-aliens-agent-prompt.md  # Ready-to-use example for Rock Aliens restaurant
+├── AGENT_PROMPT.md              # Active agent prompt (editable via dashboard — currently Rock Aliens example)
 ├── CUSTOMIZATION.md             # Guide for reselling / multi-client setup
 └── .env.local.example           # All required environment variables
 ```
