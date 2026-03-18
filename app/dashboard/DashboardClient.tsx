@@ -72,19 +72,24 @@ export default function DashboardClient() {
   }, [supabase])
 
   useEffect(() => {
-    fetchConversations().finally(() => setLoading(false))
+    let cancelled = false
+    fetchConversations().finally(() => {
+      if (!cancelled) setLoading(false)
+    })
 
     const channel = subscribeToConversations(supabase, () => {
       fetchConversations()
     })
 
     return () => {
+      cancelled = true
       supabase.removeChannel(channel)
     }
   }, [supabase, fetchConversations])
 
   useEffect(() => {
     if (!selectedConversation) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMessages([])
       return
     }
