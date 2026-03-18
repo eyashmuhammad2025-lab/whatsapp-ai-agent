@@ -4,7 +4,7 @@ import { createServerClient } from '@supabase/ssr'
 import DashboardClient from './DashboardClient'
 
 async function getServerSideUser() {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
