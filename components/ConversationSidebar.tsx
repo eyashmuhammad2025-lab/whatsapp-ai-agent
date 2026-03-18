@@ -1,3 +1,5 @@
+const SKELETON_COUNT = 5
+
 interface Conversation {
   id: string
   phone_number: string
@@ -32,8 +34,6 @@ export default function ConversationSidebar({
   onSelect,
   loading,
 }: ConversationSidebarProps) {
-const SKELETON_COUNT = 5
-
   if (loading) {
     return (
       <div className="flex-1 p-4 space-y-3">
