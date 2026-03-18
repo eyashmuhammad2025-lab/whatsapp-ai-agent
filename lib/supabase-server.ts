@@ -101,3 +101,48 @@ export async function insertMessage(
   console.log(`[supabase] Inserted ${role} message: ${data.id}`)
   return data as Message
 }
+
+/**
+ * Loads the agent prompt stored in the `settings` table (key = 'agent_prompt').
+ * Returns null if the row does not exist yet.
+ */
+export async function getAgentPromptSetting(
+  supabase: SupabaseClient
+): Promise<string | null> {
+  console.log('[supabase] Loading agent_prompt from settings table')
+  const { data, error } = await supabase
+    .from('settings')
+    .select('value')
+    .eq('key', 'agent_prompt')
+    .single()
+
+  if (error) {
+    if (error.code !== 'PGRST116') {
+      console.error('[supabase] Error reading agent_prompt setting:', error)
+    }
+    return null
+  }
+
+  return data?.value ?? null
+}
+
+/**
+ * Persists the agent prompt to the `settings` table (upsert).
+ */
+export async function saveAgentPromptSetting(
+  supabase: SupabaseClient,
+  prompt: string
+): Promise<void> {
+  console.log('[supabase] Saving agent_prompt to settings table')
+  const { error } = await supabase.from('settings').upsert(
+    { key: 'agent_prompt', value: prompt, updated_at: new Date().toISOString() },
+    { onConflict: 'key' }
+  )
+
+  if (error) {
+    console.error('[supabase] Error saving agent_prompt setting:', error)
+    throw error
+  }
+
+  console.log('[supabase] agent_prompt saved successfully')
+}

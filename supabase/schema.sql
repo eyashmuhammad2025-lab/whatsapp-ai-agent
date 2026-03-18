@@ -32,3 +32,23 @@ create policy "Authenticated users can read conversations" on public.conversatio
 
 create policy "Authenticated users can read messages" on public.messages
   as permissive for select to authenticated using (true);
+
+-- ---------------------------------------------------------------------------
+-- Settings table — stores key/value business configuration (e.g. agent prompt)
+-- ---------------------------------------------------------------------------
+create table public.settings (
+  key text primary key,
+  value text not null,
+  updated_at timestamp with time zone default now()
+);
+
+alter table public.settings enable row level security;
+
+create policy "Service role full access on settings" on public.settings
+  as permissive for all to service_role using (true) with check (true);
+
+create policy "Authenticated users can read settings" on public.settings
+  as permissive for select to authenticated using (true);
+
+-- Note: settings writes are performed server-side via the service_role key
+-- (through /api/settings route), so no direct write policy is needed for authenticated users.

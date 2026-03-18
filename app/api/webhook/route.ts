@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { parseMetaWebhook, sendWhatsAppMessage } from '@/lib/whatsapp'
-import { callOpenAI } from '@/lib/openai'
+import { callOpenAI, resolveAgentPrompt } from '@/lib/openai'
 import {
   createSupabaseServerClient,
   getOrCreateConversation,
   insertMessage,
+  getAgentPromptSetting,
 } from '@/lib/supabase-server'
 
 export async function GET(request: NextRequest) {
@@ -46,13 +47,17 @@ export async function POST(request: NextRequest) {
   console.log(`[webhook] Message from ${phone_number}: ${text}`)
 
   try {
-    const aiResponse = await callOpenAI(text)
+    const supabase = createSupabaseServerClient()
+
+    // Load agent prompt: env var → Supabase settings → AGENT_PROMPT.md → fallback
+    const dbPrompt = await getAgentPromptSetting(supabase)
+    const systemPrompt = resolveAgentPrompt(dbPrompt)
+
+    const aiResponse = await callOpenAI(text, systemPrompt)
     console.log(`[webhook] AI response generated for ${phone_number}`)
 
     await sendWhatsAppMessage(phone_number, aiResponse)
     console.log(`[webhook] WhatsApp message sent to ${phone_number}`)
-
-    const supabase = createSupabaseServerClient()
 
     const conversation = await getOrCreateConversation(supabase, phone_number)
 
